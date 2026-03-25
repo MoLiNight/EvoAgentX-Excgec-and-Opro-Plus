@@ -1,0 +1,7 @@
+{
+    "father node": 9,
+    "modification": "modify: Add a review step using the `custom` method to refine solutions before ensemble selection, ensuring better quality inputs for the ScEnsemble.",
+    "before": 0.825,
+    "after": 0.825,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "add: Modify the `__call__` method to use `ScEnsemble` for selecting the most consistent solution from multiple custom responses, improving accuracy.",
+    "before": 0.775,
+    "after": 0.8,
+    "succeed": true
+}

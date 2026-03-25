@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "add: Use the Programmer operator to verify the correctness of generated solutions via code execution.",
+    "before": 0.825,
+    "after": 0.75,
+    "succeed": false
+}

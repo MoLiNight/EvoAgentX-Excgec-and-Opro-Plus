@@ -1,0 +1,62 @@
+{
+    "4": {
+        "score": 0.825,
+        "success": {},
+        "failure": {
+            "7": {
+                "modification": "add: Use the Programmer operator to verify the correctness of generated solutions via code execution.",
+                "score": 0.75
+            },
+            "8": {
+                "modification": "modify",
+                "score": 0.75
+            }
+        }
+    },
+    "1": {
+        "score": 0.8,
+        "success": {},
+        "failure": {
+            "2": {
+                "modification": "add: use Programmer to verify solutions, modify: replace duplicate custom calls with loop",
+                "score": 0.75
+            },
+            "3": {
+                "modification": "modify",
+                "score": 0.75
+            }
+        }
+    },
+    "0": {
+        "score": 0.775,
+        "success": {
+            "1": {
+                "modification": "add: Modify the `__call__` method to use `ScEnsemble` for selecting the most consistent solution from multiple custom responses, improving accuracy.",
+                "score": 0.8
+            },
+            "4": {
+                "modification": "modify",
+                "score": 0.825
+            },
+            "9": {
+                "modification": "add",
+                "score": 0.825
+            }
+        },
+        "failure": {}
+    },
+    "2": {
+        "score": 0.75,
+        "success": {},
+        "failure": {
+            "6": {
+                "modification": "modify",
+                "score": 0.0
+            },
+            "5": {
+                "modification": "modify: Add a review step using the custom method to refine the final solution before verification",
+                "score": 0.0
+            }
+        }
+    }
+}

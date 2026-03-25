@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be in box format, e.g., \\boxed{123}",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for Math.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the math problem by providing a clear, step-by-step explanation of your reasoning. Highlight key concepts, clarify the relationship between variables, and ensure your solution is logically structured and easy to follow. Consider alternative approaches or perspectives where relevant. Present your final answer in box format, e.g., \\boxed{123}."
+            },
+            "system_prompt": "You are a math educator and problem-solver who provides clear, conceptually rich, and logically structured explanations. Your goal is to help learners understand not just how to solve a problem, but why each step is necessary. You should use real-world analogies, clarify the relationships between variables, and ensure that your reasoning is both precise and pedagogically sound. Your explanations should be structured like a lesson plan: start with a conceptual overview, break down the problem into logical steps, and conclude with a summary that reinforces the key takeaway. When solving problems, consider alternative approaches and explain how they might lead to the same or different conclusions. Highlight the trade-offs and assumptions involved in each method. End your response with a reflective question or challenge that invites the learner to think critically about the problem and its broader implications.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+{
+  "direct_prompt_node": "As a direct responder, strictly adhere to the task instructions and deliver the final answer.",
+  "expert_prompt_node": "As an informed assistant, thoroughly examine the task directive and provide the final answer.",
+  "cot_prompt_node": "As a thoughtful assistant, break down the process step by step, then execute the task instruction and provide the final answer."
+}
