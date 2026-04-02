@@ -62,7 +62,7 @@ class BaseExplanationMetricResult(BaseModel):
 - `excgec.py`：创建的，继承自 EvoAgentX 的 Benchmark 类的 EXCGEC 评估基准
 - `my_evaluator.py`：重写的，继承自 EvoAgentX 的 Evaluator 类的 EXCGEC 评估器
 - `my_score_calculator.py`：创建的，用于将 GEC 和 EXP 的评估结果（json 数据）转换为浮点数的计分器
-- 
+
 ### 优化器相关实现 `optimizers/`
 - `my_textgrad_optimizer.py`：重写的，继承自 EvoAgentX 的 TextGradOptimizer 类的优化器，改为使用加权分数
 - `my_opro_optimizer.py`：集成的，OPRO 方法在 EvoAgentX 框架下实现的优化器
@@ -80,7 +80,7 @@ class BaseExplanationMetricResult(BaseModel):
 - `aflow/graph.py`，`aflow/prompt.py`：AFlowOptimizer 优化所需文件
 
 ## 部分实验结果
-### GEC 指标对比表，step = 10，dev_data_num & test_data_num = 100
+#### GEC 指标对比表，step = 10，dev_data_num & test_data_num = 100
 | 方法 | p (精确率) | r (召回率) | f (F1分数) | acc (准确率) | tp | tn | fp (误报) | fn (漏报) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **优化前** | 0.0835 | 0.6500 | 0.0952 | 0.5872 | 0.2600 | 4.6400 | 3.1400 | 0.4600 |
@@ -91,7 +91,7 @@ class BaseExplanationMetricResult(BaseModel):
 | **AFlow** | 0.3234 | 0.5149 | 0.2359 | 0.6721 | 0.4405 | 3.2500 | 1.2738 | 0.7381 |
 | | ✅ +287% | ❌ -20.8% | ✅ +148% | ✅ +14.5% | ✅ +69.4% | ✅ -30.0% | ✅ -59.4% | ❌ +60.5% |
 
-### EXP 指标对比表，step = 10，dev_data_num & test_data_num = 100
+#### EXP 指标对比表，step = 10，dev_data_num & test_data_num = 100
 | 方法 | hit_ratio | error_type.f1 | mae | rouge-1 | rouge-2 | rouge-L | meteor | bleu |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **优化前** | 0.1725 | 0.0417 | 0.1683 | 0.0739 | 0.0198 | 0.0428 | 0.0445 | 0.0089 |
@@ -102,7 +102,7 @@ class BaseExplanationMetricResult(BaseModel):
 | **AFlow** | 0.2580 | 0.1483 | 0.3717 | 0.1267 | 0.0324 | 0.0747 | 0.0694 | 0.0099 |
 | | ✅ +49.6% | ✅ +256% | ❌ +121% | ✅ +71.4% | ✅ +63.6% | ✅ +74.5% | ✅ +56.0% | ✅ +11.2% |
 
-### GEC 指标对比表，step = 10，dev_data_num & test_data_num = 500
+#### GEC 指标对比表，step = 10，dev_data_num & test_data_num = 500
 | 方法 | p (精确率) | r (召回率) | f (F1分数) | acc (准确率) | tp | tn | fp (误报) | fn (漏报) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **优化前** | 0.0537 | 0.3137 | 0.0483 | 0.2954 | 0.1259 | 2.2058 | 1.4694 | 0.2636 |
@@ -113,7 +113,7 @@ class BaseExplanationMetricResult(BaseModel):
 | **AFlow** | 0.3199 | 0.5177 | 0.2215 | 0.6617 | 0.4401 | 3.2650 | 1.3134 | 0.7512 |
 | | ✅ +495.7% | ✅ +65.0% | ✅ +358.6% | ✅ +124.0% | ✅ +249.6% | ✅ +48.0% | ✅ -10.6% | ❌ +185.0% |
 
-### EXP 指标对比表，step = 10，dev_data_num & test_data_num = 500
+#### EXP 指标对比表，step = 10，dev_data_num & test_data_num = 500
 | 方法 | hit_ratio | error_type.f1 | mae | rouge-1 | rouge-2 | rouge-L | meteor | bleu |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **优化前** | 0.2363 | 0.0853 | 0.2774 | 0.0916 | 0.0233 | 0.0531 | 0.0519 | 0.0064 |
