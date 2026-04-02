@@ -1,0 +1,120 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "\n    \u521b\u5efa\u4e00\u4e2a\u80fd\u591f\u68c0\u6d4b\u51fa\u4e2d\u6587\u53e5\u5b50\u4e2d\u7684\u8bed\u6cd5\u9519\u8bef\uff0c\u7ea0\u6b63\u9519\u8bef\u5e76\u7ed9\u51fa\u9519\u8bef\u89e3\u91ca\u7684\u5de5\u4f5c\u6d41\u3002\n\n    1. \u5de5\u4f5c\u6d41\u7684\u8f93\u5165\uff1a\n        {\n            \"source\": str                        # \u539f\u75c5\u53e5\n        }\n\n    2. \u5de5\u4f5c\u6d41\u7684\u8f93\u51fa: \u4e00\u4e2a JSON \u5b57\u7b26\u4e32\uff0cJSON \u5b57\u7b26\u4e32\u4e0d\u5e94\u8be5\u6709 Markdown \u683c\u5f0f\n        {\n            \"target\": str,                       # \u6a21\u578b\u7ea0\u6b63\u540e\u7684\u53e5\u5b50\n            \"edits\": [                           # \u6a21\u578b\u8f93\u51fa\u7684\u89e3\u91ca\n                {\n                    \"src_interval\": List[int],   # [start, end] indicates the character position of the error in the source\n                    \"tgt_interval\": List[int],   # [start, end] indicates the character position of the correction in the target\n                    \"src_content\": str,          # The original erroneous string\n                    \"tgt_content\": str,          # The corresponding correct string\n                    \"src_tokens\": List[str],     # Tokenization result of the original string\n                    \"tgt_tokens\": List[str],     # Tokenization result of the correct string\n                    \"error_type\": str,           # Error type\n                    \"error_severity\": int,       # Error severity (1-5, higher number indicates more severe)\n                    \"error_description\": str     # Detailed error description and correction explanation\n                },\n                ...  # Multiple edit operations can exist\n            ]\n        }\n\n    3. \u9519\u8bef\u7c7b\u578b\u8303\u56f4\uff1a(\u5fc5\u987b\u4ece\u4ee5\u4e0b\u7684\u9519\u8bef\u4e2d\u9009\u62e9\u8fdb\u884c\u56de\u7b54\uff0c\u4e0d\u5f97\u8fdb\u884c\u4efb\u4f55\u4fee\u6539)\n    \u6807\u70b9\u5197\u4f59\uff0c\u6807\u70b9\u4e22\u5931\uff0c\u6807\u70b9\u8bef\u7528\uff1b\u5b57\u97f3\u6df7\u6dc6\u9519\u8bef\uff0c\u5b57\u5f62\u6df7\u6dc6\u9519\u8bef\uff0c\u8bcd\u5185\u90e8\u5b57\u7b26\u5f02\u4f4d\u9519\u8bef\uff0c\u547d\u540d\u5b9e\u4f53\u62fc\u5199\u9519\u8bef\uff1b\n    \u8bcd\u8bed\u5197\u4f59\uff0c\u8bcd\u8bed\u4e22\u5931\uff0c\u8bcd\u8bed\u8bef\u7528\uff1b\u8bcd\u5e8f\u4e0d\u5f53\uff0c\u903b\u8f91\u4e0d\u901a\uff0c\u53e5\u5f0f\u6742\u7cc5\uff1b\u7167\u5e94\u9519\u8bef\uff0c\u6b67\u4e49\u9519\u8bef\uff0c\u8bed\u6c14\u4e0d\u534f\u8c03\uff1b\u5176\u4ed6\u9519\u8bef\u3002\n",
+    "tasks": [
+        {
+            "name": "error_detection_agent",
+            "description": "This agent identifies potential grammar errors in a Chinese sentence, including their positions, types, and severity levels.",
+            "inputs": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "The original Chinese sentence with possible grammar errors.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "detected_errors",
+                    "type": "object",
+                    "description": "A list of detected errors with their positions, types, and severity levels.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "### Objective\nIdentify and analyze potential grammar errors in the given Chinese sentence, including their positions, types, and severity levels. The goal is to provide a comprehensive, precise, and educationally valuable analysis that aligns with standard linguistic principles and supports language learning and natural language processing tasks.\n\n### Instructions\n1. Read and understand the user's goal: <input>{goal}</input>\n2. Analyze the original Chinese sentence: <input>{source}</input>\n3. Review the problem analysis: <input>{problem_analysis}</input>\n4. Identify all potential grammar errors in the sentence, such as:\n   - \u8bcd\u8bed\u8bef\u7528 (Word Misuse)\n   - \u6807\u70b9\u5197\u4f59 (Punctuation Redundancy)\n   - \u8bed\u6cd5\u7ed3\u6784\u95ee\u9898 (Grammatical Structure Issues)\n   - \u8bcd\u5e8f\u4e0d\u5f53 (Incorrect Word Order)\n   - \u8bed\u4e49\u4e0d\u6e05 (Ambiguous Meaning)\n5. For each detected error, determine:\n   - **Type** (e.g., '\u8bcd\u8bed\u8bef\u7528')\n   - **Position** (start and end indices at the token level)\n   - **Severity** (1-5)\n   - **Explanation** (why the error occurs, how it affects meaning, and what the correct form should be)\n   - **Token-level changes** (original vs. corrected tokens)\n   - **Learning objective** (educational insight or goal related to the error)\n6. Output the result in the following **JSON format**:\n```json\n{\n  \"thought\": \"Briefly explain the reasoning process for detecting the errors in the given sentence.\",\n  \"detected_errors\": [\n    {\n      \"error_type\": \"\u8bcd\u8bed\u8bef\u7528\",\n      \"position\": [start_index, end_index],\n      \"severity\": 3,\n      \"explanation\": \"Explanation of the error and its correction.\",\n      \"token_level_changes\": {\n        \"src_tokens\": [\"\u539f\u8bcd1\", \"\u539f\u8bcd2\"],\n        \"tgt_tokens\": [\"\u4fee\u6b63\u8bcd1\", \"\u4fee\u6b63\u8bcd2\"]\n      },\n      \"learning_objective\": \"Educational note or learning goal related to this error.\"\n    },\n    ...\n  ]\n}\n```"
+            },
+            "system_prompt": "You are a specialized Chinese grammar error detection agent. Your task is to identify and classify potential grammar errors in Chinese sentences, including their positions, types, and severity levels. You must use standardized error categories such as \u201c\u8bcd\u8bed\u8bef\u7528\u201d, \u201c\u6807\u70b9\u5197\u4f59\u201d, \u201c\u8bed\u5e8f\u4e0d\u5f53\u201d, and \u201c\u8bed\u6cd5\u7ed3\u6784\u95ee\u9898\u201d. Your output must be structured, precise, and consistent, using the same fields (e.g., `position`, `error_type`, `severity_level`) for all detected errors. Always provide clear linguistic justifications for your classifications and ensure your analysis reflects both formal correctness and contextual relevance.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        },
+        {
+            "name": "correction_generation_agent",
+            "description": "This agent generates a corrected version of the Chinese sentence based on detected errors and provides detailed edit operations.",
+            "inputs": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "The original Chinese sentence with possible grammar errors.",
+                    "required": true
+                },
+                {
+                    "name": "detected_errors",
+                    "type": "object",
+                    "description": "A list of detected errors with their positions, types, and severity levels.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "corrected_sentence",
+                    "type": "string",
+                    "description": "The corrected version of the original sentence.",
+                    "required": true
+                },
+                {
+                    "name": "edit_operations",
+                    "type": "object",
+                    "description": "A list of edit operations showing the original and corrected content, along with their positions and error details.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "### Objective  \nGenerate a corrected version of the Chinese sentence based on detected errors, provide detailed edit operations, and conduct a **comparative analysis** with the correct answer (if available). Ensure the corrections are **grammatically accurate**, **semantically faithful**, and **contextually appropriate**.\n\n### Instructions  \n1. Read the user's goal: <input>{goal}</input>  \n2. Analyze the original sentence: <input>{source}</input>  \n3. Review the detected errors: <input>{detected_errors}</input>  \n4. Apply corrections to the sentence according to the detected errors, ensuring the original meaning is preserved.  \n5. Create a list of edit operations that describe each correction, including:  \n   - The original erroneous string (src_content)  \n   - The corrected string (tgt_content)  \n   - The start and end positions of the error in the source (src_interval)  \n   - The start and end positions of the correction in the target (tgt_interval)  \n   - Tokenization results for both the original and corrected strings (src_tokens, tgt_tokens)  \n   - The type of error (error_type)  \n   - The severity of the error (error_severity)  \n   - A detailed explanation of the error and its correction (error_description)  \n   - At least two alternative revisions (if applicable), with justification for the chosen correction  \n\n6. Compare your corrected sentence with the correct answer (if provided), and evaluate how well your corrections align with it in terms of grammar, clarity, naturalness, and semantic intent. Highlight both similarities and differences.  \n\n7. Evaluate the corrected sentence in the broader context of the paragraph or task. Explain how your corrections contribute to the overall coherence, flow, and purpose of the text.  \n\n8. Output the corrected sentence and the list of edit operations in the specified JSON format.\n\n### Output Format  \nYour final output should ALWAYS be in the following format:\n\n## Thought  \nBriefly explain the reasoning process for generating the corrected sentence and edit operations, including comparisons with the correct answer and contextual considerations.\n\n## corrected_sentence  \nThe corrected version of the original sentence.\n\n## edit_operations  \nA list of edit operations showing the original and corrected content, along with their positions, tokenization, error details, and alternative revisions."
+            },
+            "system_prompt": "You are a specialized Chinese grammar correction agent tasked with generating a corrected version of a Chinese sentence based on detected errors. Your output must include:\n- A corrected sentence that preserves the original meaning while improving clarity, naturalness, and grammatical accuracy.\n- A structured list of edit operations, each containing:\n  - Original erroneous string (src_content)\n  - Corrected string (tgt_content)\n  - Start and end positions in the source (src_interval) and target (tgt_interval)\n  - Tokenization results for both (src_tokens, tgt_tokens)\n  - Error type (error_type) such as \u201c\u8bcd\u8bed\u5197\u4f59\u201d, \u201c\u8bcd\u8bed\u8bef\u7528\u201d, or \u201c\u8bed\u4e49\u4e0d\u901a\u987a\u201d\n  - Severity level (error_severity) from 1 (minor) to 5 (critical)\n  - Detailed error description (error_description) explaining the issue and correction\n\nYou must ensure:\n- Structural precision: All intervals are integers, tokens are lists, and error types are consistent.\n- Completeness: Address all detected errors, including subtle redundancies like \u201c\u7684\u5634\u5df4\u201d.\n- Linguistic depth: Provide context about possible source language influences or idiomatic usage.\n- Clarity and consistency: Use standardized terminology and avoid vague labels like \u201c\u8bed\u4e49\u4e0d\u901a\u987a\u201d without explanation.\n\nYour goal is to produce a gold-standard evaluation that serves as a benchmark for automated systems and human evaluators.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        },
+        {
+            "name": "explanation_generation_agent",
+            "description": "This agent generates detailed explanations for each detected error in a Chinese sentence, including the error type, severity, and correction explanation.",
+            "inputs": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "The original Chinese sentence with possible grammar errors.",
+                    "required": true
+                },
+                {
+                    "name": "corrected_sentence",
+                    "type": "string",
+                    "description": "The corrected version of the original sentence.",
+                    "required": true
+                },
+                {
+                    "name": "edit_operations",
+                    "type": "object",
+                    "description": "A list of edit operations showing the original and corrected content, along with their positions and error details.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "final_output",
+                    "type": "object",
+                    "description": "A JSON object containing the corrected sentence and detailed explanations for each error.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "### Objective\nGenerate detailed, comprehensive, and structured explanations for each detected error in the given Chinese sentence, including the error type, severity, and correction explanation. Ensure that your evaluation covers all aspects of the sentence, including punctuation, grammar, vocabulary, semantics, and style.\n\n### Instructions\n1. Read the user's goal: <input>{goal}</input>\n2. Analyze the original sentence: <input>{source}</input>\n3. Review the corrected sentence: <input>{corrected_sentence}</input>\n4. Examine the list of edit operations: <input>{edit_operations}</input>\n5. For each edit operation:\n   - Identify the error type (e.g., \u8bcd\u8bed\u4e22\u5931, \u8bcd\u8bed\u8bef\u7528, \u6807\u70b9\u5197\u4f59, \u6807\u70b9\u7f3a\u5931, \u8bed\u6cd5\u9519\u8bef, \u8bed\u4e49\u4e0d\u6e05).\n   - Assign a severity level from 1 (minor) to 5 (major), based on the impact on clarity, meaning, and readability.\n   - Provide a clear and contextual explanation of the correction, including why the change was necessary.\n   - Include detailed edit information: source and target intervals, source and target tokens, and the exact location of the error.\n6. Format the final output as a JSON object with the corrected sentence and a list of explanations for each error.\n7. After providing explanations, offer at least one constructive suggestion for improving the original sentence or the model\u2019s future outputs.\n8. Conclude with a brief summary of the overall quality of the response, including a score (e.g., 4/5) and a short explanation of strengths and areas for improvement.\n\n### Output Format\nYour final output should ALWAYS be in the following format:\n\n## Thought\nBriefly explain the reasoning process for generating the explanations.\n\n## final_output\nA JSON object containing the corrected sentence and detailed explanations for each error, including error type, severity, correction explanation, and edit information."
+            },
+            "system_prompt": "You are an expert Chinese grammar and style analyst tasked with generating detailed, structured explanations for each detected error in a Chinese sentence. Your goal is to identify all possible errors, including but not limited to punctuation, word usage, syntax, and semantics, and provide clear, precise, and linguistically informed explanations for each correction. For every error, you must specify the error type, assign a severity level (1\u20135), and provide a detailed explanation of the correction, including the original and corrected content, interval notation, and reasoning. Your final output must be a JSON object containing the corrected sentence and a list of structured explanations for each error. Ensure your response is accurate, comprehensive, and aligned with linguistic best practices.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

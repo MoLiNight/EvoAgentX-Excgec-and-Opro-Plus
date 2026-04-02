@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "add: Modify the `custom` method call to include a more structured and detailed instruction that explicitly guides the model on how to handle edge cases, such as ambiguous sentences or multiple possible corrections. This will improve the accuracy of the error detection and explanation.",
-    "before": 0.04240279095238093,
-    "after": 0.05390124142857141,
-    "succeed": true
-}

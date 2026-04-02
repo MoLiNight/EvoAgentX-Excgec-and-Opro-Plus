@@ -2,11 +2,12 @@ import os
 from dotenv import load_dotenv
 from typing import Any, Callable 
 
-from excgec import EXCGEC
 from evoagentx.core.logging import logger
-from my_evaluator import MyEvaluator
-from my_aflow_optimizer import MyAFlowOptimizer
 from evoagentx.models import AliyunLLM, AliyunLLMConfig
+
+from eval.excgec import EXCGEC
+from eval.my_evaluator import MyEvaluator
+from optimizers.my_aflow_optimizer import MyAFlowOptimizer
 
 load_dotenv()
 my_api_key = os.getenv("DASHSCOPE_API_KEY")
@@ -19,6 +20,8 @@ EXPERIMENTAL_CONFIG = {
 }
 
 class ExcgecForAFlow(EXCGEC):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def _load_data(self):
         # load the original test data 
@@ -30,8 +33,8 @@ class ExcgecForAFlow(EXCGEC):
         full_test_data = self._test_data
 
         self._train_data = [full_test_data[idx] for idx in permutation[:100]]
-        self._dev_data = [full_test_data[idx] for idx in permutation[100:200]]
-        self._test_data = [full_test_data[idx] for idx in permutation[200:300]]
+        self._dev_data = [full_test_data[idx] for idx in permutation[100:600]]
+        self._test_data = [full_test_data[idx] for idx in permutation[600:1100]]
 
     async def async_evaluate(self, graph: Callable, example: Any) -> float:
         problem = example["source"]
@@ -78,7 +81,7 @@ class ExcgecForAFlow(EXCGEC):
 
 def main():
     import shutil
-    shutil.rmtree("aflow/optimized", ignore_errors=True)
+    shutil.rmtree("output/aflow/optimized", ignore_errors=True)
 
     llm_config = AliyunLLMConfig(
         model="qwen-turbo", 
@@ -93,12 +96,12 @@ def main():
     # create optimizer
     optimizer = MyAFlowOptimizer(
         graph_path = "aflow",
-        optimized_path = "aflow/optimized",
+        optimized_path = "output/aflow/optimized",
         optimizer_llm=optimizer_llm,
         executor_llm=executor_llm,
-        validation_rounds=3,
-        eval_rounds=3,
-        max_rounds=20,
+        validation_rounds=2,
+        eval_rounds=2,
+        max_rounds=10,
         **EXPERIMENTAL_CONFIG["excgec"]
     )
 

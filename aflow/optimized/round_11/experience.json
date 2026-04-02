@@ -1,7 +1,0 @@
-{
-    "father node": 6,
-    "modification": "add: Add a validation step after the custom call to ensure the output format is correct and contains all required fields. This helps prevent runtime errors due to malformed JSON outputs.",
-    "before": 0.046443583333333316,
-    "after": 0.04569909476190476,
-    "succeed": false
-}
